@@ -50,7 +50,7 @@ const  { Bus } = getCurrentInstance().appContext.config.globalProperties
 
 let findNewsPageInfo = reactive({
   keyWords: "",
-  type: 0,
+  type: 1,
   pageNum: 1,
   pageSize: 10
 })
