@@ -11,31 +11,55 @@ const finalRouter = createRouter({
     routes: staticRouter,
 })
 
-const userInfo = defineUser(pinia)
+const userInfoStore = defineUser(pinia)
 
-finalRouter.beforeEach(
-    async (to, from, next) => {
-        const token = getToken();
-        const nickName = userInfo.nickName;
-        if (token) {
-            if (to.path == "/login") {
-                next({path: "/"})
+finalRouter.beforeEach(async (to, from, next) => {
+    const token = getToken()
+    // console.log("token:  " +token)
+    const userInfo = !!userInfoStore.nickName
+    if (token) {
+        if (to.path == "/login") {
+            next({ path: "/" })
+        } else {
+            if (userInfo) {
+                next()
             } else {
-                if (nickName) {
+                try {
+                    await userInfoStore.getInfo()
                     next()
-                } //nickName不存在说明没登录
-                else {
-                    try {
-                        await userInfo.getInfo()
-                        next()
-                    } catch (error) {
-                        removeToken();
-                    }
+                } catch (error) {
+                    removeToken()
                 }
             }
-        } else {
-            next()
         }
+    } else {
+        next()
     }
-)
+});
+
+// finalRouter.beforeEach(
+//     async (to, from, next) => {
+//         const token = getToken();
+//         const nickName = userInfo.nickName;
+//         if (token) {
+//             if (to.path == "/login") {
+//                 next({path: "/"})
+//             } else {
+//                 if (nickName) {
+//                     next()
+//                 } //nickName不存在说明没登录
+//                 else {
+//                     try {
+//                         await userInfo.getInfo()
+//                         next()
+//                     } catch (error) {
+//                         removeToken();
+//                     }
+//                 }
+//             }
+//         } else {
+//             next()
+//         }
+//     }
+// )
 export  default  finalRouter

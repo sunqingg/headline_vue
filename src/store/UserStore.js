@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {getInfo} from "../api/index.js";
+import {getInfo,getLogin} from "../api/index.js";
 import {setToken,getToken, removeToken} from "../utils/token-utils.ts";
 
 export const defineUser = defineStore(
@@ -13,14 +13,21 @@ export const defineUser = defineStore(
 }),
         actions:{
         //     登录的异步操作 保存token
-            login(token){
+            async login(loginUser){
+                const result1 = await getLogin(loginUser);
+                // console.log("调试result: ", result1)
+                const result = result1.data
+                const token = result.data.token
+                // console.log("调试token: ", token)
                 this.token = token;
-                setToken(token)
+                setToken(token);
+                return result.code
             },
             async getInfo() {
-                const result = await getInfo();
-                this.nickName = result.loginUser.nickName
-                this.uid = result.loginUser.uid
+                const userInfo = await getInfo();
+                // console.log("用户信息: " +JSON.stringify(userInfo.data) )
+                this.nickName = userInfo.data.data.loginUser.nickName
+                this.uid = userInfo.data.data.loginUser.uid
             },
             initUserInfo(){
                 removeToken()

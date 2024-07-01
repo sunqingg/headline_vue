@@ -9,7 +9,8 @@
         <div class="detail">
           <span>{{ item.type == 1 ? "新闻":item.type == 2 ? "体育": item.type == 3 ? "娱乐": item.type == 4 ? "科技" : "其他" }}</span>
           <span>{{item.pageViews}}浏览</span>
-          <span>{{item.pastHours}}小时前</span>
+<!--          <span>{{item.pastHours}}小时前</span>-->
+          <span>{{(new Date().getDay()-new Date(item.createTime).getDay())*24 + (new Date().getHours() - new Date(item.createTime).getHours())}}小时前</span>
         </div>
         <div>
           <el-button @click="toDetail(item.hid)" size="small"
@@ -45,8 +46,22 @@ import {reactive, ref, watch, onMounted,getCurrentInstance} from "vue";
 import { getfindNewsPageInfo , removeByHid } from "../../api/index"
 import request from "../../utils/request.js";
 import {defineUser} from "../../store/UserStore.js";
-const type = defineUser.uid
+import pinia from "../../pinia.js";
+import router from "../../router/index.js";
+
+const userInfoStore = defineUser(pinia)
+
+const Modify = (hid) => {
+  router.push({name:"addOrModifyNews",query: {hid}})
+}
+
+const type = userInfoStore.uid
+// console.log("uid" + type)
 const  { Bus } = getCurrentInstance().appContext.config.globalProperties
+// const currentTime = ref(new Date().getHours());
+const toDetail = (hid) => {
+  router.push({name:"Detail", query: {hid}})
+}
 
 let findNewsPageInfo = reactive({
   keyWords: "",
@@ -69,7 +84,7 @@ let totalSize  = ref(0)
 let getData = async () =>{
   try {
     const data =  await request.post("portal/findNewsPage",findNewsPageInfo)
-    console.log(data)
+    // console.log(data)
     return data.data
   }catch (error){
     return Promise.reject(error)
@@ -86,10 +101,11 @@ const getPageList = async () => {
   // let result = await getfindNewsPageInfo(findNewsPageInfo.value)
   let message = await getData()
   let result = message.data
-  console.log("result: ",result)
+  // console.log("result: ",result)
   // pageData = result.pageInfo.pageData
   Object.assign(pageData,result.pageInfo.pageData)
-  console.log("pageData", pageData)
+  // pageData.pastHours = currentTime - new Date(result.pageInfo.pageData.createTime).getHours
+  // console.log("pageData", pageData)
   findNewsPageInfo.pageNum = result.pageInfo.pageNum
   findNewsPageInfo.pageSize = result.pageInfo.pageSize
   totalSize.value = +result.pageInfo.totalSize

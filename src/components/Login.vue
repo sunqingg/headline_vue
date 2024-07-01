@@ -3,6 +3,9 @@ import {reactive,ref} from "vue";
 import request from "../utils/request.js";
 import {useRouter} from 'vue-router'
 const router = useRouter()
+import {defineUser} from "../store/UserStore.js";
+
+const UserInfoStore = defineUser()
 
 let loginUser = reactive({
   username:"zhangsan",
@@ -13,15 +16,16 @@ let checkUserName = () =>{
 
 }
 async function login() {
-  let {data} = await request.post("user/login",loginUser)
-  console.log(data)
-  if (data.code === 200){
+  // let {data} = await request.post("user/login",loginUser)
+  let code = await UserInfoStore.login(loginUser)
+  // console.log(code)
+  if (code === 200){
     alert("登录成功!");
     router.push("headlinenews")
-  }else if (data.code === 501) {
+  }else if (code === 501) {
     alert("账号不存在!");
     return false
-  }else if (data.code === 503) {
+  }else if (code === 503) {
     alert("密码错误!")
     return false
   }

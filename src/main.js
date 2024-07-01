@@ -2,7 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 // import router from './router/router.js'
 import finalRouter from "./router/index.js";
+import 'element-plus/dist/index.css'
 import pinia from "./pinia.js";
+// import pinia from './store'
 
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
