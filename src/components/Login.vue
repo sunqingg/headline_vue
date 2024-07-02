@@ -21,7 +21,7 @@ async function login() {
   // console.log(code)
   if (code === 200){
     alert("登录成功!");
-    router.push("headlinenews")
+    router.push({name:"HeadlineNews"} )
   }else if (code === 501) {
     alert("账号不存在!");
     return false

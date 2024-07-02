@@ -43,7 +43,7 @@
 
 <script  setup>
 import {reactive, ref, watch, onMounted,getCurrentInstance} from "vue";
-import { getfindNewsPageInfo , removeByHid } from "../../api/index"
+import { getfindNewsPageInfo , removeByHid ,deleteNews} from "../../api/index"
 import request from "../../utils/request.js";
 import {defineUser} from "../../store/UserStore.js";
 import pinia from "../../pinia.js";
@@ -122,8 +122,15 @@ watch(() => findNewsPageInfo.value, () => {
   deep: true,
 })
 // 初始化请求分页列表数据
-
-
+// 删除文章
+const handlerDelete =async (hid) =>{
+  let result1 = await deleteNews(hid);
+  console.log(result1)
+  const result = result1.data;
+  if (result.code === 200){
+    alert("删除成功")
+  }
+}
 
 
 

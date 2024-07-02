@@ -3,6 +3,7 @@ import {createRouter,createWebHashHistory} from "vue-router";
 import {defineUser} from "../store/UserStore.js";
 import pinia from "../pinia.js";
 import {getToken, removeToken} from "../utils/token-utils.ts";
+import {getInfo} from "../api/index.js";
 
 // 前置守卫,每次router跳转都先要检测token是否过期
 
@@ -14,6 +15,7 @@ const finalRouter = createRouter({
 const userInfoStore = defineUser(pinia)
 
 finalRouter.beforeEach(async (to, from, next) => {
+    // getInfo()
     const token = getToken()
     // console.log("token:  " +token)
     const userInfo = !!userInfoStore.nickName

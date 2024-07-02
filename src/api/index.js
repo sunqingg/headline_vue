@@ -53,3 +53,19 @@ export const removeByHid = (id) => {
         data:`hid=${id}`
     })
 };
+
+export const saveOrAddNews = (info) => {
+    // console.log("info",info)
+    return   request.post("headline/update",info);
+};
+
+export const issueNews = (info) => {
+    // console.log("info",info)
+    return   request.post("headline/publish",info);
+};
+
+
+export const deleteNews = (info) => {
+    // console.log("info",info)
+    return   request.post("headline/removeByHid",`hid=${info}`);
+};

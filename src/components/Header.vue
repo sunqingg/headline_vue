@@ -96,10 +96,18 @@ const getList = async () => {
   findAllTypeList.value = result
 }
 // 页面挂载的生命周期回调
+// nickName.value = userInfoStore.nickName
+
 onUpdated(() => {
   nickName.value = userInfoStore.nickName
 })
+
+// watch(() => nickName.value,(newValue) => {
+//   nickName.value = newValue;
+// })
+
 onMounted(() => {
+  nickName.value = userInfoStore.nickName
   getList()
 })
 

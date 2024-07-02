@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus';
 import NProgress from "nprogress";
 import {defineUser} from "../store/UserStore.js";
 import pinia from "../pinia.js";
+import {getInfo} from "../api/index.js";
 
 let instance = axios.create(
     {
@@ -10,6 +11,8 @@ let instance = axios.create(
         timeout: 10000
     }
 )
+
+
 
 instance.interceptors.request.use(
     request => {
