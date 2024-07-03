@@ -7,7 +7,7 @@
       <el-form-item style="margin: 50px 0;" label="文章内容" prop="article">
         <el-input v-model="formData.article" type="textarea" rows="8"></el-input>
       </el-form-item>
-      <el-form-item label="文章级别"  prop="type">
+      <el-form-item label="文章内容"  prop="type">
         <el-select v-model="formData.type" placeholder="请选择文章类别">
           <el-option v-for="item in article" :label="item.name" :value="item.type">
           </el-option>

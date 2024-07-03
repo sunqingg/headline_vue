@@ -60,7 +60,10 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { removeToken } from '../utils/token-utils' 
 import pinia from '../pinia.js';
 import { defineUser } from '../store/UserStore.js'
+import {storeToRefs} from "pinia";
+
 const userInfoStore = defineUser(pinia)
+
 const nickName = ref("")
 // 获取到 全局事件总线
 const { Bus } = getCurrentInstance().appContext.config.globalProperties
@@ -96,19 +99,19 @@ const getList = async () => {
   findAllTypeList.value = result
 }
 // 页面挂载的生命周期回调
-// nickName.value = userInfoStore.nickName
 
-onUpdated(() => {
-  nickName.value = userInfoStore.nickName
-})
 
-// watch(() => nickName.value,(newValue) => {
-//   nickName.value = newValue;
+// onUpdated(() => {
+//   nickName.value = userInfoStore.nickName
 // })
 
 onMounted(() => {
-  nickName.value = userInfoStore.nickName
   getList()
+})
+
+watch(()=> userInfoStore.nickName,(newValue,oldValue)=>{
+  console.log(`${oldValue}变成了${newValue}`)
+  nickName.value = userInfoStore.nickName
 })
 
 //点击切换高亮的回调(排他思想)

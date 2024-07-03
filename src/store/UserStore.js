@@ -25,7 +25,7 @@ export const defineUser = defineStore(
             },
             async getInfo() {
                 const userInfo = await getInfo();
-                // console.log("用户信息: " +JSON.stringify(userInfo.data) )
+                console.log("用户昵称: " +userInfo.data.data.loginUser.nickName )
                 this.nickName = userInfo.data.data.loginUser.nickName
                 this.uid = userInfo.data.data.loginUser.uid
             },

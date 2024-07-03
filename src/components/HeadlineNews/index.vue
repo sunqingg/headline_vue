@@ -10,7 +10,7 @@
           <span>{{ item.type == 1 ? "新闻":item.type == 2 ? "体育": item.type == 3 ? "娱乐": item.type == 4 ? "科技" : "其他" }}</span>
           <span>{{item.pageViews}}浏览</span>
 <!--          <span>{{item.pastHours}}小时前</span>-->
-          <span>{{(new Date().getDay()-new Date(item.createTime).getDay())*24 + (new Date().getHours() - new Date(item.createTime).getHours())}}小时前</span>
+          <span>{{(new Date().getDay()-new Date(item.updateTime).getDay())*24 + (new Date().getHours() - new Date(item.updateTime).getHours())}}小时前</span>
         </div>
         <div>
           <el-button @click="toDetail(item.hid)" size="small"
@@ -47,30 +47,25 @@ import { getfindNewsPageInfo , removeByHid ,deleteNews} from "../../api/index"
 import request from "../../utils/request.js";
 import {defineUser} from "../../store/UserStore.js";
 import pinia from "../../pinia.js";
-import router from "../../router/index.js";
-
+// import router from "../../router/index.js";
+import router from "../../router/routers.js";
+const  { Bus } = getCurrentInstance().appContext.config.globalProperties
 const userInfoStore = defineUser(pinia)
-
 const Modify = (hid) => {
   router.push({name:"addOrModifyNews",query: {hid}})
 }
-
 const type = userInfoStore.uid
 // console.log("uid" + type)
-const  { Bus } = getCurrentInstance().appContext.config.globalProperties
 // const currentTime = ref(new Date().getHours());
 const toDetail = (hid) => {
   router.push({name:"Detail", query: {hid}})
 }
-
 let findNewsPageInfo = reactive({
   keyWords: "",
-  type: 1,
+  type: 0,
   pageNum: 1,
   pageSize: 10
 })
-
-
 let pageData = reactive([{
   hid: null,
   pageViews: null,
@@ -80,7 +75,6 @@ let pageData = reactive([{
   type: null
 }])
 let totalSize  = ref(0)
-
 let getData = async () =>{
   try {
     const data =  await request.post("portal/findNewsPage",findNewsPageInfo)
@@ -89,8 +83,12 @@ let getData = async () =>{
   }catch (error){
     return Promise.reject(error)
   }
-
 }
+
+watch(() =>findNewsPageInfo.type,(newValue,oldValue)=>{
+  // header修改高亮
+  getPageList();
+})
 
 // 组件挂载的生命周期钩子
 onMounted(() => {
@@ -111,7 +109,7 @@ const getPageList = async () => {
   totalSize.value = +result.pageInfo.totalSize
 }
 
-
+// 全局事件 名称为tid,动作是修改findNewsPageInfo.type
 Bus.on('tid', (type) => {
   findNewsPageInfo.type = type
 })
